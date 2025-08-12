@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio to Transcript</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background-color: #f5f5f5;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: auto; 
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn { 
+            padding: 12px 25px; 
+            background: #5ebec4; 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #4a9ca1;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 8px;
+            border: 2px dashed #5ebec4;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .download-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5f5;
+            border-radius: 5px;
+        }
+        .download-link {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 8px 15px;
+            background: #5ebec4;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .download-link:hover {
+            background: #4a9ca1;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #388e3c;
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #555;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Audio to Transcript Converter</h2>
+        <p>Upload your audio file (.mp3 or .wav) to generate a transcript</p>
+        
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data">
+            <label for="audio">Select Audio File:</label>
+            <input type="file" name="audio" id="audio" accept=".mp3,.wav" required>
+            <br><br>
+            <button type="submit" class="btn">Generate Transcript</button>
+        </form>
+
+        {% if txt_file and docx_file %}
+            <div class="download-section">
+                <div class="success">✓ Transcript generated successfully!</div>
+                {% if detected_lang or strategy_used %}
+                    <div class="info">
+                        {% if detected_lang %}Language: {{ detected_lang }}{% endif %}
+                        {% if is_mixed %} (Mixed content detected){% endif %}
+                    </div>
+                {% endif %}
+                <h3>Download Your Transcript:</h3>
+                <a href="/download/{{ txt_file }}" class="download-link">📄 Download TXT</a>
+                <a href="/download/{{ docx_file }}" class="download-link">📝 Download DOCX</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
